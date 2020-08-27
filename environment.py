@@ -131,6 +131,7 @@ class SchedulerEnv(discrete.DiscreteEnv):
         p = [[] for action_idx in range(self.num_actions)]
         for action_idx in range(self.num_actions):
             prob = 1
+            '''ERROR HERE!!!!! Need to deal with the index=-1, which means nothing changed'''
             next_s_idx = self.next_state_idx(current_s_idx, action_idx)
             next_s = self.perms[next_s_idx]
             arrival_b_num = next_s[self.buffer_size - 1]

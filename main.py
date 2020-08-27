@@ -33,7 +33,11 @@ if __name__ == '__main__':
     schedulerAlg = scheduler.Scheduler()
     print(color.GREEN + 'SUCCESS: ' + color.END + 'Scheduler generated!')
 
-    # Q = schedulerAlg.QLearning(env=schedulerEnv, num_episodes=1000, gamma=1, lr=0.1, e=0.1)
-    # print('Action values:')
-    # print(Q)
+    Q = schedulerAlg.QLearning(env=schedulerEnv, num_episodes=1000, gamma=1, lr=0.1, e=0.1)
+    print('Action values of Qlearning:')
+    print(Q)
+
+    Q = schedulerAlg.SARSA(env=schedulerEnv, num_episodes=1000, gamma=1, lr=0.1, e=0.1)
+    print('Action values of SARSA:')
+    print(Q)
 
