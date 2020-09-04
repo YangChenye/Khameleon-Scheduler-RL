@@ -1,3 +1,6 @@
+# Created by Chenye Yang on 2020/8/12.
+# Copyright © 2020 Chenye Yang. All rights reserved.
+
 from gym.envs.toy_text import discrete
 import numpy as np
 from scipy.special import comb

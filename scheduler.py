@@ -1,3 +1,6 @@
+# Created by Chenye Yang on 2020/8/12.
+# Copyright © 2020 Chenye Yang. All rights reserved.
+
 import random
 import numpy as np
 import matplotlib.pyplot as plt
