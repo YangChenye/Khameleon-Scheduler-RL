@@ -4,6 +4,7 @@
 import scheduler
 import environment
 import predictor
+import time
 
 class color:
    PURPLE = '\033[95m'
@@ -24,23 +25,31 @@ if __name__ == '__main__':
     utility = [[0.6, 0.3, 0.1] for i in range(num_actions)] # utility[response] is the <list> utilities of blocks
 
     print(color.YELLOW + 'INFO: ' + color.END + 'Generating scheduler environment...')
+    tic = time.perf_counter()
     schedulerEnv = environment.SchedulerEnv(buffer_size, num_actions, num_block, utility)
-    print(color.GREEN + 'SUCCESS: ' + color.END + 'Scheduler environment generated!')
+    toc = time.perf_counter()
+    print(color.GREEN + 'SUCCESS: ' + color.END + color.BLUE + '[{:0.4f} sec] '.format(toc - tic) + color.END + 'Scheduler environment generated!')
     print('Number of states: {}'.format(schedulerEnv.num_states))
 
     print(color.YELLOW + 'INFO: ' + color.END + 'Generating predictor...')
+    tic = time.perf_counter()
     predictorMgm = predictor.Predictor(buffer_size, num_actions)
-    print(color.GREEN + 'SUCCESS: ' + color.END + 'Predictor generated!')
+    toc = time.perf_counter()
+    print(color.GREEN + 'SUCCESS: ' + color.END + color.BLUE + '[{:0.4f} sec] '.format(toc - tic) + color.END + 'Predictor generated!')
 
     print(color.YELLOW + 'INFO: ' + color.END + 'Generating scheduler...')
+    tic = time.perf_counter()
     schedulerAlg = scheduler.Scheduler()
-    print(color.GREEN + 'SUCCESS: ' + color.END + 'Scheduler generated!')
+    toc = time.perf_counter()
+    print(color.GREEN + 'SUCCESS: ' + color.END + color.BLUE + '[{:0.4f} sec] '.format(toc - tic) + color.END + 'Scheduler generated!')
 
+    tic = time.perf_counter()
     Q = schedulerAlg.QLearning(env=schedulerEnv, num_episodes=1000, gamma=1, lr=0.1, e=0.1)
-    print('Action values of Qlearning:')
+    toc = time.perf_counter()
+    print(color.BLUE + '[{:0.4f} sec] '.format(toc - tic) + color.END + 'Action values of Qlearning:')
     print(Q)
 
     Q = schedulerAlg.SARSA(env=schedulerEnv, num_episodes=1000, gamma=1, lr=0.1, e=0.1)
-    print('Action values of SARSA:')
+    print(color.BLUE + '[{:0.4f} sec] '.format(toc - tic) + color.END + 'Action values of SARSA:')
     print(Q)
 

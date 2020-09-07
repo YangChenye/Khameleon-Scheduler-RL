@@ -136,9 +136,13 @@ class SchedulerEnv(discrete.DiscreteEnv):
             prob = 1
             '''ERROR HERE!!!!! Need to deal with the index=-1, which means nothing changed'''
             next_s_idx = self.next_state_idx(current_s_idx, action_idx)
-            next_s = self.perms[next_s_idx]
-            arrival_b_num = next_s[self.buffer_size - 1]
-            reward = self.reward(arrival_b_num)
+            if next_s_idx >= 0:
+                next_s = self.perms[next_s_idx]
+                arrival_b_num = next_s[self.buffer_size - 1]
+                reward = self.reward(arrival_b_num)
+            else:
+                next_s_idx = current_s_idx
+                reward = 0
             terminal = 0
             p[action_idx].append((prob, next_s_idx, reward, terminal))
         return p
