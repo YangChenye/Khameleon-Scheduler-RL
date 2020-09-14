@@ -75,8 +75,8 @@ class Scheduler():
         action: int
         Index of the chosen action
         '''
-        chance = 0.1
-        if random.random() > chance:
+        balance = 0.1
+        if random.random() > balance:
             action = self.epsilon_greedy(value, e, seed) # choose action from State using e-greedy policy derived from Q
         else:
             action = self.follow_prediction(prediction)  # choose action from Prediction with max prob

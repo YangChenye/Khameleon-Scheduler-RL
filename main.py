@@ -25,7 +25,7 @@ if __name__ == '__main__':
     num_block = [3 for i in range(num_actions)]  # each response has 5 blocks
     utility = [[0.6, 0.3, 0.1] for i in range(num_actions)] # utility[response] is the <list> utilities of blocks
 
-    print(color.PURPLE + 'Predefined transformation relationship'.center(80, '#') + color.END)
+    print(color.PURPLE + 'Pre-computed transition relationship'.center(80, '#') + color.END)
     print(color.YELLOW + 'INFO: ' + color.END + 'Generating scheduler environment...')
     tic = time.perf_counter()
     schedulerEnv = environment.SchedulerEnv(buffer_size, num_actions, num_block, utility)
@@ -57,7 +57,7 @@ if __name__ == '__main__':
     print(color.BLUE + '[{:0.4f} sec] '.format(toc - tic) + color.END + 'Action values of SARSA:')
     print(Q)
 
-    # print(color.PURPLE + 'Dynamic transformation relationship'.center(80, '#') + color.END)
+    # print(color.PURPLE + 'Dynamic transition relationship'.center(80, '#') + color.END)
     # print(color.YELLOW + 'INFO: ' + color.END + 'Generating dynamic scheduler environment...')
     # tic = time.perf_counter()
     # schedulerEnv_Dynamic = environment.SchedulerEnv_Dynamic(buffer_size, num_actions, num_block, utility)
