@@ -41,9 +41,52 @@ class Scheduler():
         return action
 
 
-    def QLearning(self, env, num_episodes, gamma, lr, e):
+    def follow_prediction(self, prediction):
+        '''
+        choose action from Prediction with max prob.
+
+        Inputs:
+        prediction: float list
+        A list of predicted probability of actions to choose from
+
+        Outputs:
+        action: int
+        Index of the chosen action
+        '''
+        action =  prediction.index(max(prediction))
+        return action
+
+
+    def which_action(self, prediction, value, e, seed=None):
+        '''
+        balance between greedy-policy and predicted distribution.
+
+        Inputs:
+        prediction: float list
+        A list of predicted probability of actions to choose from
+        value: numpy ndarray
+        A vector of values of actions to choose from
+        e: float
+        Epsilon
+        seed: None or int
+        Assign an integer value to remove the randomness
+
+        Outputs:
+        action: int
+        Index of the chosen action
+        '''
+        chance = 0.1
+        if random.random() > chance:
+            action = self.epsilon_greedy(value, e, seed) # choose action from State using e-greedy policy derived from Q
+        else:
+            action = self.follow_prediction(prediction)  # choose action from Prediction with max prob
+        return action
+
+
+    def QLearning(self, prediction, env, num_episodes, gamma, lr, e):
         """
         Implement the Q-learning algorithm following the epsilon-greedy exploration.
+
         Inputs:
         env: OpenAI Gym environment
                 env.P: dictionary
@@ -81,7 +124,7 @@ class Scheduler():
 
             while (not env.P[state][0][0][3] and step < max_iteration):
                 step += 1
-                action = self.epsilon_greedy(Q[state], e)  # choose action from State using e-greedy policy derived from Q
+                action = self.which_action(prediction, Q[state], e) # which action to take
                 reward = env.P[state][action][0][2]  # take action, get reward
                 next_state = env.P[state][action][0][1]  # take action, get next state
                 diff = Q[next_state]
@@ -106,9 +149,10 @@ class Scheduler():
 
         return Q
 
-    def SARSA(self, env, num_episodes, gamma, lr, e):
+    def SARSA(self, prediction, env, num_episodes, gamma, lr, e):
         """
         Implement the SARSA algorithm following epsilon-greedy exploration.
+
         Inputs:
         env: OpenAI Gym environment
                 env.P: dictionary
@@ -142,14 +186,14 @@ class Scheduler():
 
         for episode in range(num_episodes):
             state = random.randint(0, (env.nS - 1))  # randomly initialize start state
-            action = self.epsilon_greedy(Q[state], e)  # choose action from State using e-greedy policy derived from Q
+            action = self.which_action(prediction, Q[state], e) # which action to take
             step = 0
 
             while (not env.P[state][0][0][3] and step < max_iteration):
                 step += 1
                 reward = env.P[state][action][0][2]  # take action, get reward
                 next_state = env.P[state][action][0][1]  # take action, get next state
-                next_action = self.epsilon_greedy(Q[next_state], e)
+                next_action = self.which_action(prediction, Q[next_state], e)  # which action to take
                 diff = [Q[next_state][a] - Q[state][action] for a in range(env.nA)]
                 Q[state][action] = Q[state][action] + lr * (reward + gamma * Q[next_state][next_action] - Q[state][action])
                 state = next_state
@@ -208,9 +252,52 @@ class Scheduler_Dynamic():
         return action
 
 
-    def QLearning(self, env, num_episodes, gamma, lr, e):
+    def follow_prediction(self, prediction):
+        '''
+        choose action from Prediction with max prob.
+
+        Inputs:
+        prediction: float list
+        A list of predicted probability of actions to choose from
+
+        Outputs:
+        action: int
+        Index of the chosen action
+        '''
+        action =  prediction.index(max(prediction))
+        return action
+
+
+    def which_action(self, prediction, value, e, seed=None):
+        '''
+        balance between greedy-policy and predicted distribution.
+
+        Inputs:
+        prediction: float list
+        A list of predicted probability of actions to choose from
+        value: numpy ndarray
+        A vector of values of actions to choose from
+        e: float
+        Epsilon
+        seed: None or int
+        Assign an integer value to remove the randomness
+
+        Outputs:
+        action: int
+        Index of the chosen action
+        '''
+        chance = 0
+        if random.random() > chance:
+            action = self.epsilon_greedy(value, e, seed) # choose action from State using e-greedy policy derived from Q
+        else:
+            action = self.follow_prediction(prediction)  # choose action from Prediction with max prob
+        return action
+
+
+    def QLearning(self, prediction, env, num_episodes, gamma, lr, e):
         """
         Implement the Q-learning algorithm following the epsilon-greedy exploration.
+
         Inputs:
         env: OpenAI Gym environment
                 env.P: dictionary
@@ -248,7 +335,7 @@ class Scheduler_Dynamic():
 
             while (step < max_iteration):
                 step += 1
-                action = self.epsilon_greedy(Q[state], e)  # choose action from State using e-greedy policy derived from Q
+                action = self.which_action(prediction, Q[state], e) # which action to take
                 next_state, reward = env.trans(state)[action][0][1:3]  # take action, get next state and reward
                 diff = Q[next_state]
                 Q[state][action] = Q[state][action] + lr * (
@@ -272,9 +359,10 @@ class Scheduler_Dynamic():
 
         return Q
 
-    def SARSA(self, env, num_episodes, gamma, lr, e):
+    def SARSA(self, prediction, env, num_episodes, gamma, lr, e):
         """
         Implement the SARSA algorithm following epsilon-greedy exploration.
+
         Inputs:
         env: OpenAI Gym environment
                 env.trans(): dictionary
@@ -308,13 +396,13 @@ class Scheduler_Dynamic():
 
         for episode in range(num_episodes):
             state = random.randint(0, (env.nS - 1))  # randomly initialize start state
-            action = self.epsilon_greedy(Q[state], e)  # choose action from State using e-greedy policy derived from Q
+            action = self.which_action(prediction, Q[state], e) # which action to take
             step = 0
 
             while (step < max_iteration):
                 step += 1
                 next_state, reward = env.trans(state)[action][0][1:3]  # take action, get next state and reward
-                next_action = self.epsilon_greedy(Q[next_state], e)
+                next_action = self.which_action(prediction, Q[next_state], e)  # which action to take
                 diff = [Q[next_state][a] - Q[state][action] for a in range(env.nA)]
                 Q[state][action] = Q[state][action] + lr * (reward + gamma * Q[next_state][next_action] - Q[state][action])
                 state = next_state
